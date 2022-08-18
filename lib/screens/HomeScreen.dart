@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
       ),
-      backgroundColor: PRIMARY_COLOR,
       body: FutureBuilder<Map<ItemCode, List<StatModel>>>(
           future: fetchData(),
           builder: (context, snapshot) {
@@ -89,24 +88,34 @@ class _HomeScreenState extends State<HomeScreen> {
                   stat: stat);
             }).toList();
 
-            return CustomScrollView(
-              slivers: [
-                MainAppBar(
-                  region: region,
-                  status: status,
-                  stat: pm10RecentStat,
-                ),
-                SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      CategoryCard(region: region, models: ssModel),
-                      SizedBox(height: 16),
-                      HourlyCard()
-                    ],
+            return Container(
+              color: status.primaryColor,
+              child: CustomScrollView(
+                slivers: [
+                  MainAppBar(
+                    region: region,
+                    status: status,
+                    stat: pm10RecentStat,
                   ),
-                )
-              ],
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        CategoryCard(
+                            darkColor: status.darkColor,
+                            lightColor: status.lightColor,
+                            region: region,
+                            models: ssModel),
+                        SizedBox(height: 16),
+                        HourlyCard(
+                          darkColor: status.darkColor,
+                          lightColor: status.lightColor,
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             );
           }),
     );
