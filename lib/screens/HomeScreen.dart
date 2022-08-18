@@ -9,7 +9,9 @@ import 'package:flutter_project_dust/components/main_drawer.dart';
 import 'package:flutter_project_dust/components/mame_stat.dart';
 import 'package:flutter_project_dust/const/colors.dart';
 import 'package:flutter_project_dust/const/env.dart';
+import 'package:flutter_project_dust/const/status_level.dart';
 import 'package:flutter_project_dust/model/stat_model.dart';
+import 'package:flutter_project_dust/repository/stat_repository.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -25,21 +27,9 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchData();
   }
 
-  fetchData() async {
-    await Dio().get(
-        "http://apis.data.go.kr/B552584/ArpltnStatsSvc/getCtprvnMesureLIst",
-        queryParameters: {
-          "serviceKey": serviceKey,
-          "returnType": "json",
-          "numOfRows": 30,
-          "pageNo": 1,
-          "itemCode": "PM10",
-          "searchCondition": "WEEK",
-          "dataGubun": "HOUR"
-        }).then((response) {
-      print(response.data['response']['body']['items']
-          .map((item) => StatModel.fromJson(json: item)));
-    });
+  Future<List<StatModel>> fetchData() async {
+    final statModels = await StatRepository.fetchData();
+    return statModels;
   }
 
   @override
@@ -47,17 +37,44 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: MainDrawer(),
       backgroundColor: PRIMARY_COLOR,
-      body: CustomScrollView(
-        slivers: [
-          MainAppBar(),
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [CategoryCard(), SizedBox(height: 16), HourlyCard()],
-            ),
-          )
-        ],
-      ),
+      body: FutureBuilder<List<StatModel>>(
+          future: fetchData(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text("에러가 있습니다."),
+              );
+            }
+
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            List<StatModel> stats = snapshot.data!;
+            StatModel recentStat = stats[0];
+            final status = statusLevel
+                .where((element) => element.minFineDust < recentStat.seoul)
+                .last;
+
+            return CustomScrollView(
+              slivers: [
+                MainAppBar(
+                  status: status,
+                  stat: recentStat,
+                ),
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      CategoryCard(),
+                      SizedBox(height: 16),
+                      HourlyCard()
+                    ],
+                  ),
+                )
+              ],
+            );
+          }),
     );
   }
 }
