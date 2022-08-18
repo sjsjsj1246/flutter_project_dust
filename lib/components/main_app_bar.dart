@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project_dust/const/colors.dart';
 import 'package:flutter_project_dust/model/stat_model.dart';
 import 'package:flutter_project_dust/model/status_model.dart';
+import 'package:flutter_project_dust/utils/data_utils.dart';
 
 class MainAppBar extends StatelessWidget {
   final StatusModel status;
@@ -30,7 +30,7 @@ class MainAppBar extends StatelessWidget {
                 ),
               ),
               Text(
-                getTimeFromDateTime(dataTime: stat.dataTime),
+                DataUtils.getTimeFromDateTime(stat.dataTime),
                 style: textStyle.copyWith(
                   fontSize: 20.0,
                 ),
@@ -60,15 +60,5 @@ class MainAppBar extends StatelessWidget {
         )),
       ),
     );
-  }
-
-  String getTimeFromDateTime({
-    required DateTime dataTime,
-  }) {
-    return '${dataTime.year}년 ${dataTime.month}월 ${dataTime.day}일 ${getTimeFormat(dataTime.hour)}:${getTimeFormat(dataTime.minute)}';
-  }
-
-  String getTimeFormat(int number) {
-    return number.toString().padLeft(2, '0');
   }
 }

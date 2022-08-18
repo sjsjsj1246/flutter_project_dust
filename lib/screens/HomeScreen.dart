@@ -12,6 +12,7 @@ import 'package:flutter_project_dust/const/env.dart';
 import 'package:flutter_project_dust/const/status_level.dart';
 import 'package:flutter_project_dust/model/stat_model.dart';
 import 'package:flutter_project_dust/repository/stat_repository.dart';
+import 'package:flutter_project_dust/utils/data_utils.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -52,9 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
             List<StatModel> stats = snapshot.data!;
             StatModel recentStat = stats[0];
-            final status = statusLevel
-                .where((element) => element.minFineDust < recentStat.seoul)
-                .last;
+            final status = DataUtils.getStatusFromItemCodeAndValue(
+              itemCode: ItemCode.PM10,
+              value: recentStat.seoul,
+            );
 
             return CustomScrollView(
               slivers: [
