@@ -3,7 +3,9 @@ import 'package:flutter_project_dust/const/env.dart';
 import 'package:flutter_project_dust/model/stat_model.dart';
 
 class StatRepository {
-  static Future<List<StatModel>> fetchData() async {
+  static Future<List<StatModel>> fetchData({
+    required ItemCode itemCode,
+  }) async {
     final response = await Dio().get(
         "http://apis.data.go.kr/B552584/ArpltnStatsSvc/getCtprvnMesureLIst",
         queryParameters: {
@@ -11,7 +13,7 @@ class StatRepository {
           "returnType": "json",
           "numOfRows": 30,
           "pageNo": 1,
-          "itemCode": "PM10",
+          "itemCode": itemCode.name,
           "searchCondition": "WEEK",
           "dataGubun": "HOUR"
         });

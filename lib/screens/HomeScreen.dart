@@ -31,9 +31,24 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchData();
   }
 
-  Future<List<StatModel>> fetchData() async {
-    final statModels = await StatRepository.fetchData();
-    return statModels;
+  Future<Map<ItemCode, List<StatModel>>> fetchData() async {
+    Map<ItemCode, List<StatModel>> stats = {};
+    List<Future> futures = [];
+
+    for (ItemCode itemCode in ItemCode.values) {
+      futures.add(StatRepository.fetchData(itemCode: itemCode));
+    }
+
+    final results = await Future.wait(futures);
+
+    for (int i = 0; i < results.length; i++) {
+      final key = ItemCode.values[i];
+      final value = results[i];
+
+      stats.addAll({key: value});
+    }
+
+    return stats;
   }
 
   @override
@@ -49,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       backgroundColor: PRIMARY_COLOR,
-      body: FutureBuilder<List<StatModel>>(
+      body: FutureBuilder<Map<ItemCode, List<StatModel>>>(
           future: fetchData(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -62,11 +77,11 @@ class _HomeScreenState extends State<HomeScreen> {
               return Center(child: CircularProgressIndicator());
             }
 
-            List<StatModel> stats = snapshot.data!;
-            StatModel recentStat = stats[0];
+            Map<ItemCode, List<StatModel>> stats = snapshot.data!;
+            StatModel pm10RecentStat = stats[ItemCode.PM10]!.first;
             final status = DataUtils.getStatusFromItemCodeAndValue(
               itemCode: ItemCode.PM10,
-              value: recentStat.seoul,
+              value: pm10RecentStat.seoul,
             );
 
             return CustomScrollView(
@@ -74,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 MainAppBar(
                   region: region,
                   status: status,
-                  stat: recentStat,
+                  stat: pm10RecentStat,
                 ),
                 SliverToBoxAdapter(
                   child: Column(
