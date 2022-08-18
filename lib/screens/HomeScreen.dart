@@ -9,6 +9,7 @@ import 'package:flutter_project_dust/components/main_drawer.dart';
 import 'package:flutter_project_dust/components/mame_stat.dart';
 import 'package:flutter_project_dust/const/colors.dart';
 import 'package:flutter_project_dust/const/env.dart';
+import 'package:flutter_project_dust/const/regions.dart';
 import 'package:flutter_project_dust/const/status_level.dart';
 import 'package:flutter_project_dust/model/stat_model.dart';
 import 'package:flutter_project_dust/repository/stat_repository.dart';
@@ -22,6 +23,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String region = regions[0];
+
   @override
   void initState() {
     super.initState();
@@ -36,7 +39,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MainDrawer(),
+      drawer: MainDrawer(
+        selectedRegion: region,
+        onRegionTap: (String region) {
+          setState(() {
+            this.region = region;
+            Navigator.of(context).pop();
+          });
+        },
+      ),
       backgroundColor: PRIMARY_COLOR,
       body: FutureBuilder<List<StatModel>>(
           future: fetchData(),
@@ -61,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return CustomScrollView(
               slivers: [
                 MainAppBar(
+                  region: region,
                   status: status,
                   stat: recentStat,
                 ),
