@@ -5,17 +5,22 @@ import 'package:flutter_project_dust/const/regions.dart';
 typedef OnRegionTap = void Function(String region);
 
 class MainDrawer extends StatelessWidget {
+  final Color darkColor, lightColor;
   final OnRegionTap onRegionTap;
   final String selectedRegion;
 
   const MainDrawer(
-      {required this.onRegionTap, required this.selectedRegion, Key? key})
+      {required this.darkColor,
+      required this.lightColor,
+      required this.onRegionTap,
+      required this.selectedRegion,
+      Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: DARK_COLOR,
+      backgroundColor: darkColor,
       child: ListView(
         children: [
           DrawerHeader(
@@ -23,7 +28,7 @@ class MainDrawer extends StatelessWidget {
           ),
           ...regions
               .map((e) => ListTile(
-                  selectedTileColor: LIGHT_COLOR,
+                  selectedTileColor: lightColor,
                   selectedColor: Colors.black,
                   selected: e == selectedRegion,
                   tileColor: Colors.white,

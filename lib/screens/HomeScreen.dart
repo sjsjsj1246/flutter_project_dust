@@ -49,15 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MainDrawer(
-        selectedRegion: region,
-        onRegionTap: (String region) {
-          setState(() {
-            this.region = region;
-            Navigator.of(context).pop();
-          });
-        },
-      ),
       body: FutureBuilder<Map<ItemCode, List<StatModel>>>(
           future: fetchData(),
           builder: (context, snapshot) {
@@ -88,33 +79,46 @@ class _HomeScreenState extends State<HomeScreen> {
                   stat: stat);
             }).toList();
 
-            return Container(
-              color: status.primaryColor,
-              child: CustomScrollView(
-                slivers: [
-                  MainAppBar(
-                    region: region,
-                    status: status,
-                    stat: pm10RecentStat,
-                  ),
-                  SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        CategoryCard(
+            return Scaffold(
+              drawer: MainDrawer(
+                darkColor: status.darkColor,
+                lightColor: status.lightColor,
+                selectedRegion: region,
+                onRegionTap: (String region) {
+                  setState(() {
+                    this.region = region;
+                    Navigator.of(context).pop();
+                  });
+                },
+              ),
+              body: Container(
+                color: status.primaryColor,
+                child: CustomScrollView(
+                  slivers: [
+                    MainAppBar(
+                      region: region,
+                      status: status,
+                      stat: pm10RecentStat,
+                    ),
+                    SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          CategoryCard(
+                              darkColor: status.darkColor,
+                              lightColor: status.lightColor,
+                              region: region,
+                              models: ssModel),
+                          SizedBox(height: 16),
+                          HourlyCard(
                             darkColor: status.darkColor,
                             lightColor: status.lightColor,
-                            region: region,
-                            models: ssModel),
-                        SizedBox(height: 16),
-                        HourlyCard(
-                          darkColor: status.darkColor,
-                          lightColor: status.lightColor,
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             );
           }),
