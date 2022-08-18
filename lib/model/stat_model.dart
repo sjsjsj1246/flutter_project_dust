@@ -30,55 +30,55 @@ class StatModel {
 
   StatModel.fromJson({required Map<String, dynamic> json})
       : daegu = double.parse(
-          json['daegu'],
+          json['daegu'] ?? '0',
         ),
         chungnam = double.parse(
-          json['chungnam'],
+          json['chungnam'] ?? '0',
         ),
         incheon = double.parse(
-          json['incheon'],
+          json['incheon'] ?? '0',
         ),
         daejeon = double.parse(
-          json['daejeon'],
+          json['daejeon'] ?? '0',
         ),
         gyeongbuk = double.parse(
-          json['gyeongbuk'],
+          json['gyeongbuk'] ?? '0',
         ),
         sejong = double.parse(
-          json['sejong'],
+          json['sejong'] ?? '0',
         ),
         gwangju = double.parse(
-          json['gwangju'],
+          json['gwangju'] ?? '0',
         ),
         jeonbuk = double.parse(
-          json['jeonbuk'],
+          json['jeonbuk'] ?? '0',
         ),
         gangwon = double.parse(
-          json['gangwon'],
+          json['gangwon'] ?? '0',
         ),
         ulsan = double.parse(
-          json['ulsan'],
+          json['ulsan'] ?? '0',
         ),
         jeonnam = double.parse(
-          json['jeonnam'],
+          json['jeonnam'] ?? '0',
         ),
         seoul = double.parse(
-          json['seoul'],
+          json['seoul'] ?? '0',
         ),
         busan = double.parse(
-          json['busan'],
+          json['busan'] ?? '0',
         ),
         jeju = double.parse(
-          json['jeju'],
+          json['jeju'] ?? '0',
         ),
         chungbuk = double.parse(
-          json['chungbuk'],
+          json['chungbuk'] ?? '0',
         ),
         gyeongnam = double.parse(
-          json['gyeongnam'],
+          json['gyeongnam'] ?? '0',
         ),
         gyeonggi = double.parse(
-          json['gyeonggi'],
+          json['gyeonggi'] ?? '0',
         ),
         dataTime = DateTime.parse(json['dataTime']),
         itemCode = parseItemCode(json['itemCode']);
