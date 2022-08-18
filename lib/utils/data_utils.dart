@@ -24,7 +24,7 @@ class DataUtils {
     }
   }
 
-  static String itemCodeKrString(ItemCode itemCode) {
+  static String getItemCodeKrString(ItemCode itemCode) {
     switch (itemCode) {
       case ItemCode.PM10:
         return '미세먼지';

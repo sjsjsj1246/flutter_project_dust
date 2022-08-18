@@ -1,16 +1,11 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project_dust/components/card_title.dart';
 import 'package:flutter_project_dust/components/category_card.dart';
 import 'package:flutter_project_dust/components/hourly_card.dart';
 import 'package:flutter_project_dust/components/main_app_bar.dart';
-import 'package:flutter_project_dust/components/main_card.dart';
 import 'package:flutter_project_dust/components/main_drawer.dart';
-import 'package:flutter_project_dust/components/mame_stat.dart';
 import 'package:flutter_project_dust/const/colors.dart';
-import 'package:flutter_project_dust/const/env.dart';
 import 'package:flutter_project_dust/const/regions.dart';
-import 'package:flutter_project_dust/const/status_level.dart';
+import 'package:flutter_project_dust/model/stat_and_status_model.dart';
 import 'package:flutter_project_dust/model/stat_model.dart';
 import 'package:flutter_project_dust/repository/stat_repository.dart';
 import 'package:flutter_project_dust/utils/data_utils.dart';
@@ -84,6 +79,16 @@ class _HomeScreenState extends State<HomeScreen> {
               value: pm10RecentStat.seoul,
             );
 
+            final ssModel = stats.keys.map((key) {
+              final value = stats[key]!;
+              final stat = value[0];
+              return StatAndStatusModel(
+                  itemCode: key,
+                  status: DataUtils.getStatusFromItemCodeAndValue(
+                      value: stat.getLevelFromModel(region), itemCode: key),
+                  stat: stat);
+            }).toList();
+
             return CustomScrollView(
               slivers: [
                 MainAppBar(
@@ -95,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      CategoryCard(),
+                      CategoryCard(region: region, models: ssModel),
                       SizedBox(height: 16),
                       HourlyCard()
                     ],
