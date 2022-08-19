@@ -7,9 +7,13 @@ class MainAppBar extends StatelessWidget {
   final String region;
   final StatusModel status;
   final StatModel stat;
+  final DateTime dateTime;
+  final bool isExpanded;
 
   const MainAppBar(
-      {required this.region,
+      {required this.isExpanded,
+      required this.dateTime,
+      required this.region,
       required this.status,
       required this.stat,
       Key? key})
@@ -19,7 +23,14 @@ class MainAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = TextStyle(color: Colors.white, fontSize: 30);
     return SliverAppBar(
+      pinned: true,
+      title: isExpanded
+          ? null
+          : Text(
+              "$region ${DataUtils.getTimeFromDateTime(dateTime)}",
+            ),
       backgroundColor: status.primaryColor,
+      centerTitle: true,
       expandedHeight: 500,
       flexibleSpace: FlexibleSpaceBar(
         background: SafeArea(
